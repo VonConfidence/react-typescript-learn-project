@@ -1,0 +1,17 @@
+import { Button } from 'antd';
+import * as React from 'react';
+import logoImg from './job.png';
+
+class Logo extends React.Component {
+  public render() {
+    return (
+      <div className="App">
+        {/* <Button type="primary">Button</Button> */}
+        <img src={logoImg} alt="logo" />
+        <Button type="primary">Button</Button>
+      </div>
+    );
+  }
+}
+
+export default Logo;
