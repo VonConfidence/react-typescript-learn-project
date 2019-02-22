@@ -1,6 +1,6 @@
 import { Button } from 'antd';
 import * as React from 'react';
-import logoImg from './job.png';
+import logoImg from './lf.jpg';
 
 class Logo extends React.Component {
   public render() {
