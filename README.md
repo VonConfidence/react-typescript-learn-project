@@ -35,3 +35,18 @@ create-react-app my-project-name --scripts-version=react-scripts-ts
 1. yarn add antd
 2. yarn add ts-import-plugin react-app-rewired@1.6.2 react-app-rewire-less --dev
 3. 项目初始化见: https://www.jianshu.com/p/daef80dbd2ed
+
+## 其他方案搭建基础 antd+typescript 框架
+
+1. 如果使用新的 react-app-rewired@2.x 版本，还需要安装 customize-cra。
+
+   ```
+   yarn add react-app-rewired customize-cra
+   ```
+
+2. [create-react-app myapp --scripts-version=react-scripts-ts-antd](https://github.com/SZzzzz/react-scripts-ts-antd)
+
+## 项目启动
+
+1. cd server && npm run dev 启动后台服务 koa, 监听 8080 端口, 异步方法使用
+2. 进入项目根路径: npm run start
