@@ -30,8 +30,8 @@
     "@types/redux": "3.6.0",
     "@types/redux-thunk": "2.1.0",
     "babel-plugin-transform-decorators-legacy": "1.3.5",
-    "react-app-rewired": "1.6.2",
     "react-app-rewire-less": "2.1.3",
+    "react-app-rewired": "1.6.2",
     "ts-import-plugin": "1.5.5",
     "typescript": "3.3.3"
   },
