@@ -1,6 +1,6 @@
 // db.js
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/koa-db');
+mongoose.connect('mongodb://localhost/population-test');
 
 const db = mongoose.connection;
 // 防止Mongoose: mpromise 错误
@@ -15,12 +15,35 @@ db.on('open', () => {
 
 // 声明schema
 const userSchema = mongoose.Schema({
-  username: String,
+  avatar: String,
+  captcha: String,
+  company: String,
+  create_time: String,
+  desc: Array,
+  email: String,
+  money: String,
   password: String,
+  phone: String,
+  prefix: String,
+  residence: Array,
+  title: String,
   token: String,
-  create_time: Date,
+  user_type: {
+    type: Number,
+    require: true,
+  },
+  username: String,
 });
-// 根据schema生成model
-const User = mongoose.model('User', userSchema);
 
-module.exports = User;
+const chatSchema = mongoose.Schema({});
+
+// 根据schema生成model
+const UsersModel = mongoose.model('Users', userSchema);
+const ChatsModel = mongoose.model('chats', chatSchema);
+
+const models = {
+  user: UsersModel,
+  chat: ChatsModel,
+};
+
+module.exports = models;

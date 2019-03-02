@@ -1,0 +1,19 @@
+[
+  {
+    "avatar": "https://upload.jianshu.io/users/upload_avatars/6083454/ef5ee700-812a-4153-9317-9d26808bf01c.jpg?imageMogr2/auto-orient/strip|imageView2/1/w/120/h/120",
+    "captcha": "1234",
+    "company": "HUST",
+    "create_time": "2019/02/27 20:32:00",
+    "desc": ["javascript", "react", "es6"],
+    "email": "123@qq.com",
+    "money": "20000",
+    "password": "1234",
+    "phone": "130",
+    "prefix": "86",
+    "residence": ["zhejiang", "hangzhou", "xihu"],
+    "title": "低级工程师",
+    "token": "test user",
+    "user_type": 1,
+    "username": "confidence"
+  }
+]

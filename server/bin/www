@@ -7,6 +7,7 @@
 const app = require('../app');
 const debug = require('debug')('demo:server');
 const http = require('http');
+const c_process = require('child_process');
 
 /**
  * Get port from environment and store in Express.
@@ -82,5 +83,10 @@ function onError(error) {
 function onListening() {
   const addr = server.address();
   const bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
-  debug('Listening on ' + bind);
+  c_process.exec('mongod --dbpath E:\\mongoDATA --rest', (error, stdout, stderr) => {
+    if (error !== null) {
+      console.log('exec error: ' + error);
+    }
+    debug('Listening on ' + bind);
+  });
 }

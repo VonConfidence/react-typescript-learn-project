@@ -1,31 +1,32 @@
 import { Button, Checkbox, Form, Icon, Input, Radio } from 'antd';
 import * as React from 'react';
+import { connect } from 'react-redux';
+import { Redirect, RouteComponentProps } from 'react-router-dom';
+import { Dispatch } from 'redux';
+
+import { IRootState } from '../../store/index';
+import { ILoginForm, IStoreState, login } from '../../store/user.redux';
 
 import './login.less';
 interface IProps {
   form: any;
-  history: any;
+  user: IStoreState;
+  login: (formValues: ILoginForm) => void;
 }
 
-interface IFormValues {
-  password: string;
-  remember: boolean;
-  username: string;
-}
-
-class NormalLoginForm extends React.Component<IProps> {
+class NormalLoginForm extends React.Component<IProps & RouteComponentProps> {
   public handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    this.props.form.validateFields((err: Error, values: IFormValues) => {
+    this.props.form.validateFields((err: Error, values: ILoginForm) => {
       if (!err) {
         console.log('Received values of form: ', values);
+        this.props.login(values);
       }
     });
   };
 
   public handleRegister = (e: React.FormEvent) => {
     this.props.history.push('/register');
-    console.log('跳转到history');
   };
 
   public render() {
@@ -34,12 +35,17 @@ class NormalLoginForm extends React.Component<IProps> {
       labelCol: { span: 4 },
       wrapperCol: { span: 20 },
     };
+    const {
+      user: { redirectTo },
+    } = this.props;
     return (
       <div className="register-container">
         <h2 className="register-title">登录页面</h2>
+        {redirectTo ? <Redirect to={redirectTo} /> : null}
         <Form onSubmit={this.handleSubmit} className="login-form">
           <Form.Item {...formItemLayout} label="用户名">
             {getFieldDecorator('username', {
+              initialValue: 'confidence',
               rules: [{ required: true, message: 'Please input your username!' }],
             })(
               <Input
@@ -50,6 +56,7 @@ class NormalLoginForm extends React.Component<IProps> {
           </Form.Item>
           <Form.Item {...formItemLayout} label="密码">
             {getFieldDecorator('password', {
+              initialValue: '1234',
               rules: [{ required: true, message: 'Please input your Password!' }],
             })(
               <Input
@@ -60,7 +67,9 @@ class NormalLoginForm extends React.Component<IProps> {
             )}
           </Form.Item>
           <Form.Item {...formItemLayout} label="用户类型">
-            {getFieldDecorator('user_type')(
+            {getFieldDecorator('user_type', {
+              initialValue: 1,
+            })(
               <Radio.Group>
                 <Radio value={0}>管理员</Radio>
                 <Radio value={1}>普通用户</Radio>
@@ -90,4 +99,17 @@ class NormalLoginForm extends React.Component<IProps> {
 
 const WrappedNormalLoginForm = Form.create({ name: 'normal_login' })(NormalLoginForm);
 
-export default WrappedNormalLoginForm;
+const mapStateToProps = (state: IRootState) => {
+  return {
+    user: state.user,
+  };
+};
+
+const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
+  login: (values: ILoginForm) => dispatch(login(values)),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(WrappedNormalLoginForm);

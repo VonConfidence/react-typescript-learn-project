@@ -1,5 +1,5 @@
 import {
-  AutoComplete,
+  Avatar,
   Button,
   Cascader,
   Checkbox,
@@ -7,16 +7,22 @@ import {
   Form,
   Icon,
   Input,
+  Radio,
   Row,
   Select,
   Tooltip,
 } from 'antd';
 import * as React from 'react';
+import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
+import { Dispatch } from 'redux';
+
+import { IRootState } from '../../store/index';
+import { IRegisterForm, register } from '../../store/user.redux';
 
 import './register.less';
 
 const { Option } = Select;
-const AutoCompleteOption = AutoComplete.Option;
 
 const residences = [
   {
@@ -56,16 +62,15 @@ const residences = [
 
 interface IState {
   confirmDirty: boolean;
-  autoCompleteResult: any[];
 }
 
 interface IProps {
   form: any;
+  user: any;
+  register: (formValues: IRegisterForm) => void;
 }
-
 class RegistrationForm extends React.Component<IProps, IState> {
   public state = {
-    autoCompleteResult: [],
     confirmDirty: false,
   };
 
@@ -85,9 +90,11 @@ class RegistrationForm extends React.Component<IProps, IState> {
 
   public handleSubmit = (e: React.MouseEvent) => {
     e.preventDefault();
-    this.props.form.validateFieldsAndScroll((err: Error, values: any[]) => {
+    this.props.form.validateFieldsAndScroll((err: Error, values: any) => {
       if (!err) {
+        // 提交表单的数据对象:values
         console.log('Received values of form: ', values);
+        this.props.register(values);
       }
     });
   };
@@ -100,19 +107,8 @@ class RegistrationForm extends React.Component<IProps, IState> {
     callback();
   };
 
-  public handleWebsiteChange = (value: string) => {
-    let autoCompleteResult: string[];
-    if (!value) {
-      autoCompleteResult = [];
-    } else {
-      autoCompleteResult = ['.com', '.org', '.net'].map(domain => `${value}${domain}`);
-    }
-    this.setState({ autoCompleteResult });
-  };
-
   public render() {
     const { getFieldDecorator } = this.props.form;
-    const { autoCompleteResult } = this.state;
 
     const formItemLayout = {
       labelCol: {
@@ -145,13 +141,14 @@ class RegistrationForm extends React.Component<IProps, IState> {
       </Select>
     );
 
-    const websiteOptions = autoCompleteResult.map(website => (
-      <AutoCompleteOption key={website}>{website}</AutoCompleteOption>
-    ));
+    const {
+      user: { redirectTo },
+    } = this.props;
 
     return (
       <div className="register-container">
-        <h2>注册页面</h2>
+        <h2>注册页面 跳转: {redirectTo}</h2>
+        {redirectTo ? <Redirect to={redirectTo} /> : null}
         <div className="register-form-container">
           <Form onSubmit={this.handleSubmit}>
             <Form.Item
@@ -166,13 +163,70 @@ class RegistrationForm extends React.Component<IProps, IState> {
               }
             >
               {getFieldDecorator('username', {
+                initialValue: 'confidence',
                 rules: [
-                  { required: true, message: 'Please input your username!', whitespace: true },
+                  {
+                    message: 'Please input your username!',
+                    required: true,
+                    whitespace: true,
+                  },
                 ],
               })(<Input />)}
             </Form.Item>
+            <Form.Item
+              {...formItemLayout}
+              label={
+                <span>
+                  图像&nbsp;
+                  <Tooltip title="输入资源地址">
+                    <Avatar
+                      icon="user"
+                      size="small"
+                      src="https://upload.jianshu.io/users/upload_avatars/6083454/ef5ee700-812a-4153-9317-9d26808bf01c.jpg?imageMogr2/auto-orient/strip|imageView2/1/w/120/h/120"
+                    />
+                  </Tooltip>
+                </span>
+              }
+            >
+              {getFieldDecorator('avatar', {
+                initialValue:
+                  'https://upload.jianshu.io/users/upload_avatars/6083454/ef5ee700-812a-4153-9317-9d26808bf01c.jpg?imageMogr2/auto-orient/strip|imageView2/1/w/120/h/120',
+              })(<Input />)}
+            </Form.Item>
+            <Form.Item {...formItemLayout} label="用户类型">
+              {getFieldDecorator('user_type', {
+                initialValue: 1,
+                rules: [
+                  {
+                    message: 'Please choose user type!',
+                    required: true,
+                  },
+                ],
+              })(
+                <Radio.Group>
+                  <Radio value={1}>普通用户</Radio>
+                  <Radio value={0}>管理员</Radio>
+                </Radio.Group>
+              )}
+            </Form.Item>
+            <Form.Item {...formItemLayout} label="职称">
+              {getFieldDecorator('title', {
+                initialValue: '程序猿',
+              })(
+                <Radio.Group>
+                  <Radio.Button value="其它">其它</Radio.Button>
+                  <Radio.Button value="程序猿">程序猿</Radio.Button>
+                  <Radio.Button value="低级工程师">低级工程师</Radio.Button>
+                  <Radio.Button value="中级工程师">中级工程师</Radio.Button>
+                  <Radio.Button value="高级工程师">高级工程师</Radio.Button>
+                  <Radio.Button value="专家">专家</Radio.Button>
+                  <Radio.Button value="科学家">科学家</Radio.Button>
+                </Radio.Group>
+              )}
+            </Form.Item>
             <Form.Item {...formItemLayout} label="邮箱">
               {getFieldDecorator('email', {
+                initialValue: 'confidence@qq.com',
                 rules: [
                   {
                     message: 'The input is not valid E-mail!',
@@ -185,21 +239,31 @@ class RegistrationForm extends React.Component<IProps, IState> {
                 ],
               })(<Input />)}
             </Form.Item>
-            <Form.Item {...formItemLayout} label="密码">
-              {getFieldDecorator('password', {
+            <Form.Item {...formItemLayout} label="公司">
+              {getFieldDecorator('company', {
+                initialValue: 'HUST',
                 rules: [
                   {
-                    message: 'Please input your password!',
+                    message: 'Please input your Company!',
                     required: true,
                   },
+                ],
+              })(<Input />)}
+            </Form.Item>
+            <Form.Item {...formItemLayout} label="期望薪水/月">
+              {getFieldDecorator('money', {
+                initialValue: '1000$',
+                rules: [
                   {
-                    validator: this.validateToNextPassword,
+                    message: 'Please input your your money!',
+                    required: true,
                   },
                 ],
-              })(<Input type="password" />)}
+              })(<Input />)}
             </Form.Item>
             <Form.Item {...formItemLayout} label="确认密码">
               {getFieldDecorator('confirm', {
+                initialValue: '123',
                 rules: [
                   {
                     message: 'Please confirm your password!',
@@ -210,6 +274,20 @@ class RegistrationForm extends React.Component<IProps, IState> {
                   },
                 ],
               })(<Input type="password" onBlur={this.handleConfirmBlur} />)}
+            </Form.Item>
+            <Form.Item {...formItemLayout} label="密码">
+              {getFieldDecorator('password', {
+                initialValue: '123',
+                rules: [
+                  {
+                    message: 'Please input your password!',
+                    required: true,
+                  },
+                  {
+                    validator: this.validateToNextPassword,
+                  },
+                ],
+              })(<Input type="password" />)}
             </Form.Item>
             <Form.Item {...formItemLayout} label="居住地址">
               {getFieldDecorator('residence', {
@@ -225,20 +303,23 @@ class RegistrationForm extends React.Component<IProps, IState> {
             </Form.Item>
             <Form.Item {...formItemLayout} label="电话号码">
               {getFieldDecorator('phone', {
+                initialValue: '130',
                 rules: [{ required: true, message: 'Please input your phone number!' }],
               })(<Input addonBefore={prefixSelector} style={{ width: '100%' }} />)}
             </Form.Item>
-            <Form.Item {...formItemLayout} label="网站">
-              {getFieldDecorator('website', {
-                rules: [{ required: true, message: 'Please input website!' }],
+            <Form.Item {...formItemLayout} label="职业标签">
+              {getFieldDecorator('desc', {
+                initialValue: ['javascript', 'typescript'],
+                rules: [{ required: true, message: 'Please select your labels!', type: 'array' }],
               })(
-                <AutoComplete
-                  dataSource={websiteOptions}
-                  onChange={this.handleWebsiteChange}
-                  placeholder="website"
-                >
-                  <Input />
-                </AutoComplete>
+                <Select mode="multiple" placeholder="Please select favourite job labels">
+                  <Option value="javascript">Javascript</Option>
+                  <Option value="nodejs">Nodejs</Option>
+                  <Option value="react">React</Option>
+                  <Option value="es6">ES6</Option>
+                  <Option value="typescript">TypeScript</Option>
+                  <Option value="Koa2">koa2</Option>
+                </Select>
               )}
             </Form.Item>
             <Form.Item
@@ -249,6 +330,7 @@ class RegistrationForm extends React.Component<IProps, IState> {
               <Row gutter={8}>
                 <Col span={12}>
                   {getFieldDecorator('captcha', {
+                    initialValue: '1234',
                     rules: [{ required: true, message: 'Please input the captcha you got!' }],
                   })(<Input />)}
                 </Col>
@@ -280,4 +362,17 @@ class RegistrationForm extends React.Component<IProps, IState> {
 
 const WrappedRegistrationForm = Form.create({ name: 'register' })(RegistrationForm);
 
-export default WrappedRegistrationForm;
+const mapStateToProps = (state: IRootState) => {
+  return {
+    user: state.user,
+  };
+};
+
+export const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
+  register: (values: IRegisterForm) => dispatch(register(values)),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(WrappedRegistrationForm);

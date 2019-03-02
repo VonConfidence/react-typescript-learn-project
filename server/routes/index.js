@@ -1,5 +1,5 @@
 const router = require('koa-router')();
-const newsList = require('./../db/news.json');
+const newsList = require('./../data/news.json');
 
 router.get('/', async (ctx, next) => {
   await ctx.render('index', {
