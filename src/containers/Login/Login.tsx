@@ -41,7 +41,7 @@ class NormalLoginForm extends React.Component<IProps & RouteComponentProps> {
     return (
       <div className="register-container">
         <h2 className="register-title">登录页面</h2>
-        {redirectTo ? <Redirect to={redirectTo} /> : null}
+        {redirectTo && redirectTo !== '/login' ? <Redirect to={redirectTo} /> : null}
         <Form onSubmit={this.handleSubmit} className="login-form">
           <Form.Item {...formItemLayout} label="用户名">
             {getFieldDecorator('username', {

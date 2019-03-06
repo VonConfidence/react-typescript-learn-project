@@ -251,6 +251,15 @@ router.post('/register', async ctx => {
   }
 });
 
+router.get('/logout', async ctx => {
+  ctx.session = null;
+  ctx.body = {
+    statusCode: 0,
+    msg: '',
+    data: {},
+  };
+});
+
 router.get('/bar', async ctx => {
   ctx.body = 'this is a users/bar response';
 });

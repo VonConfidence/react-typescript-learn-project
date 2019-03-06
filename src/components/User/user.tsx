@@ -49,7 +49,7 @@ class UserPage extends React.PureComponent<IProps & RouteComponentProps, IState>
             style={{ width: 600, marginTop: 16 }}
             key={cardItem._id}
             actions={[
-              <Icon type="setting" key={cardItem._id + 'setting'} />,
+              <Icon type="message" key={cardItem._id + 'setting'} />,
               <Icon type="edit" key={cardItem._id + 'edit'} />,
               <Icon type="ellipsis" key={cardItem._id + 'ellipsis'} />,
             ]}

@@ -5,6 +5,7 @@ const REGISTER_SUCCESS = 'REGISTER_SUCCESS';
 const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 const ERROR_MSG: string = 'ERROR_MSG';
 const LOAD_USER: string = 'LOAD_USER';
+const USER_LOGOUT: string = 'USER_LOGOUT';
 
 export interface ILoginForm {
   password: string;
@@ -87,6 +88,14 @@ export function userReducer(state = initialState, action: IActionType) {
         redirectTo: getRedirectPath(action.payload),
       };
     }
+    case USER_LOGOUT: {
+      return {
+        // 登录信息
+        isAuth: false,
+        msg: '',
+        redirectTo: '/login',
+      };
+    }
     default:
       break;
   }
@@ -107,6 +116,10 @@ function errorMsg(msg: string): IActionType {
 
 function loadData(userinfo: IRegisterForm) {
   return { type: LOAD_USER, payload: userinfo };
+}
+
+function userLogout() {
+  return { type: USER_LOGOUT, payload: {} };
 }
 
 // loginAction
@@ -176,6 +189,18 @@ export function updateUserInfo(user: IRegisterForm) {
     const res = await Axios.post('/users/update', user);
     if (res.status === 200 && res.data.statusCode === 0) {
       dispatch(loadData(res.data.data.user));
+    } else {
+      // 表示修改失败
+      dispatch(errorMsg(res.data.msg));
+    }
+  };
+}
+
+export function logout() {
+  return async (dispatch: Dispatch) => {
+    const res = await Axios.get('/users/logout');
+    if (res.status === 200 && res.data.statusCode === 0) {
+      dispatch(userLogout());
     } else {
       // 表示修改失败
       dispatch(errorMsg(res.data.msg));

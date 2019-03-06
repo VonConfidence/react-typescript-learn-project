@@ -7,6 +7,7 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 // import { Dispatch } from 'redux';
 import Admin from '../Admin/admin';
 import User from '../User/user';
+import Me from './../PersonCenter/personcenter';
 
 import { IRootState } from '../../store';
 
@@ -29,11 +30,11 @@ interface IProps {
 // const Admin: React.SFC<{}> = (props: any) => <div>管理员首页</div>;
 // const User: React.SFC<{}> = (props: any) => <div>用户首页</div>;
 const Msg: React.SFC<{}> = (props: any) => <div>消息列表</div>;
-const Me: React.SFC<{}> = (props: any) => <div>个人中心页面</div>;
+// const Me: React.SFC<{}> = (props: any) => <div>个人中心页面</div>;
 
 class DashBoard extends React.Component<IProps & RouteComponentProps, any> {
   public tabsChange = (key: string) => {
-    // console.log('Change', key);
+    console.log('Change', key);
     this.props.history.push(key);
   };
 
