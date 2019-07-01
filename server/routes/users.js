@@ -114,6 +114,21 @@ async function updateUserById(uid, user) {
 }
 
 ////////////////////////////////////////////////////////////////////////
+router.get('/find', async ctx => {
+  const touid = ctx.query.touid;
+  const uid = ctx.session.uid;
+  const loginStatus = ctx.session.loginStatus;
+  if (!uid || !loginStatus || !touid) {
+    return (ctx.body = {
+      statusCode: 1,
+      msg: '参数出错或者没有登录',
+      data: {},
+    });
+  }
+  const res = await findUserById(touid);
+  return (ctx.body = res);
+});
+
 router.get('/list', async ctx => {
   let {
     query: { type = 'users' },

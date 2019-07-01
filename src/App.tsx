@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Provider } from 'react-redux';
 import { BrowserRouter, Route } from 'react-router-dom';
 import AuthRoute from './components/AuthRoute/authroute';
+import Chat from './components/Chat/chat';
 import DashBoard from './components/DashBoard/dashboard';
 import AdminInfoPage from './containers/AdminInfo/admininfo';
 import Login from './containers/Login';
@@ -30,6 +31,7 @@ class App extends React.Component {
             <Route path="/userinfo" component={UserInfoPage} />
             <Route path="/login" component={Login} />
             <Route path="/register" component={Register} />
+            <Route path="/chat/:user" component={Chat} />
             <Route path="/test" component={Test} />
             <Route component={DashBoard} />
           </div>

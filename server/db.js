@@ -35,7 +35,24 @@ const userSchema = mongoose.Schema({
   username: String,
 });
 
-const chatSchema = mongoose.Schema({});
+const chatSchema = mongoose.Schema({
+  chatid: String,
+  from: String,
+  to: String,
+  read: {
+    type: Boolean,
+    default: false,
+  },
+  content: {
+    type: String,
+    require: true,
+    default: '',
+  },
+  create_time: {
+    type: Number,
+    default: Date.now(),
+  },
+});
 
 // 根据schema生成model
 const UsersModel = mongoose.model('Users', userSchema);

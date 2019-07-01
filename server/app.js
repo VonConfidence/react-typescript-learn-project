@@ -9,6 +9,7 @@ const session = require('koa-session');
 
 const index = require('./routes/index');
 const users = require('./routes/users');
+const chats = require('./routes/chats');
 
 // error handler
 onerror(app);
@@ -52,6 +53,7 @@ app.use(session(CONFIG, app));
 // routes
 app.use(index.routes(), index.allowedMethods());
 app.use(users.routes(), users.allowedMethods());
+app.use(chats.routes(), chats.allowedMethods());
 
 // error-handling
 app.on('error', (err, ctx) => {

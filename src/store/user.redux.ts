@@ -34,6 +34,16 @@ export interface IRegisterForm {
   token: string; // 用户唯一token值 暂时没有用到
 }
 
+export interface IChat {
+  chatid?: string;
+  toUserAvatar?: string;
+  from: string;
+  to: string;
+  read?: boolean;
+  content: string;
+  create_time?: number;
+}
+
 interface IActionType {
   type: string;
   msg: string;
